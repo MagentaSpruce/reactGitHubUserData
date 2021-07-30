@@ -22,13 +22,13 @@ const Repos = () => {
     // console.log(item);
     return total;
   }, {});
-  console.log(languages);
+  // console.log(languages);
   languages = Object.values(languages)
     .sort((a, b) => {
       return b.value - a.value;
     })
     .slice(0, 5);
-  console.log(languages);
+  // console.log(languages);
   const chartData = [
     {
       label: "HTML",
@@ -50,7 +50,7 @@ const Repos = () => {
   return (
     <section className="section">
       <Wrapper className="section-center">
-        {/* <ExampleChart data={chartData} />; */}
+        <Doughnut2D data={chartData} />
         <Pie3D data={languages} />
       </Wrapper>
     </section>
