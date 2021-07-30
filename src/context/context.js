@@ -14,6 +14,23 @@ const GithubProvider = ({ children }) => {
   const [followers, setFollowers] = useState(mockFollowers);
   const [requests, setRequests] = useState(0);
   const [loading, setIsLoading] = useState(false);
+  const [error, setError] = useState({ show: false, msg: "" });
+
+  const searchGithubUser = async (user) => {
+    toggleError();
+    //setLoading(true)
+    const response = await axios(`${rootUrl}/users/${user}`).catch((err) =>
+      console.log(err)
+    );
+    if (response) {
+      setGithubUser(response.data);
+    } else {
+      toggleError(
+        true,
+        "That user cannot be found! Check your spelling or else you got ghosted!"
+      );
+    }
+  };
 
   const checkRequests = () => {
     axios(`${rootUrl}/rate_limit`)
@@ -21,17 +38,36 @@ const GithubProvider = ({ children }) => {
         let {
           rate: { remaining },
         } = data;
+        // remaining = 0;
         setRequests(remaining);
         if (remaining === 0) {
+          toggleError(
+            true,
+            "sorry, you have exceeded your hourly requests amount from the GitHub API, you have to wait 1 hour to continue using the app."
+          );
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  function toggleError(show = false, msg = "") {
+    setError({ show, msg });
+  }
+
   useEffect(checkRequests, []);
   return (
-    <GithubContext.Provider value={{ githubUser, repos, followers, requests }}>
+    <GithubContext.Provider
+      value={{
+        githubUser,
+        repos,
+        followers,
+        requests,
+        error,
+        searchGithubUser,
+      }}
+    >
       {children}
     </GithubContext.Provider>
   );
