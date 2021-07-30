@@ -5,6 +5,30 @@ import { ExampleChart, Pie3D, Column3D, Bar3D, Doughnut2D } from "./Charts";
 const Repos = () => {
   const { repos } = React.useContext(GithubContext);
   // console.log(repos);
+  let languages = repos.reduce((total, item) => {
+    // console.log(item);
+    const { language } = item;
+    if (!language) return total;
+    // console.log(language);
+    if (!total[language]) {
+      total[language] = { label: language, value: 1 };
+    } else {
+      total[language] = {
+        ...total[language],
+        value: total[language].value + 1,
+      };
+    }
+    // console.log(total);
+    // console.log(item);
+    return total;
+  }, {});
+  console.log(languages);
+  languages = Object.values(languages)
+    .sort((a, b) => {
+      return b.value - a.value;
+    })
+    .slice(0, 5);
+  console.log(languages);
   const chartData = [
     {
       label: "HTML",
@@ -27,7 +51,7 @@ const Repos = () => {
     <section className="section">
       <Wrapper className="section-center">
         {/* <ExampleChart data={chartData} />; */}
-        <Pie3D data={chartData} />
+        <Pie3D data={languages} />
       </Wrapper>
     </section>
   );
