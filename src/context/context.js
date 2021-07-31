@@ -18,7 +18,7 @@ const GithubProvider = ({ children }) => {
 
   const searchGithubUser = async (user) => {
     toggleError();
-    //setLoading(true)
+    loading(true);
     const response = await axios(`${rootUrl}/users/${user}`).catch((err) =>
       console.log(err)
     );
@@ -30,6 +30,8 @@ const GithubProvider = ({ children }) => {
         "That user cannot be found! Check your spelling or else you got ghosted!"
       );
     }
+    checkRequests();
+    setIsLoading(false);
   };
 
   const checkRequests = () => {
@@ -66,6 +68,7 @@ const GithubProvider = ({ children }) => {
         requests,
         error,
         searchGithubUser,
+        loading,
       }}
     >
       {children}
