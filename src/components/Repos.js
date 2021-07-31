@@ -45,7 +45,7 @@ const Repos = () => {
       return { ...item, value: item.stars };
     })
     .slice(0, 5);
-  console.log(mostPopular);
+  // console.log(mostPopular);
 
   // stars, forks
   let { stars, forks } = repos.reduce(

@@ -25,15 +25,22 @@ const GithubProvider = ({ children }) => {
     if (response) {
       setGithubUser(response.data);
       const { login, followers_url } = response.data;
-      axios(`${rootUrl}/users/${login}/repos?per_page=50`).then((response) =>
-        setRepos(response.data)
-      );
 
-      axios(`${followers_url}?per_page=50`).then((response) =>
-        setFollowers(response.data)
-      );
       //   https://api.github.com/users/magentaspruce/repos?per_page=100
       //   https://api.github.com/users/magentaspruce/followers
+      await Promise.allSettled([
+        axios(`${rootUrl}/users/${login}/repos?per_page=50`),
+        axios(`${followers_url}?per_page=50`),
+      ]).then((results) => {
+        const [repos, followers] = results;
+        const status = "fulfilled";
+        if (repos.status === status) {
+          setRepos(repos.value.data);
+        }
+        if (followers.status === status) {
+          setFollowers(followers.value.data);
+        }
+      });
     } else {
       toggleError(
         true,
