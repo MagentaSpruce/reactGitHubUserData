@@ -1,5 +1,6 @@
 # reactGitHubUserData
 This React app pulls GitHub user profiles and displays various data including the use of charts for data display.
+Visit app here: https://react-github-user-search-sprucey.netlify.app/login
 
 This app uses fusion charts and alt0.
 
