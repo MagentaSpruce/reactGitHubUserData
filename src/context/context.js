@@ -18,12 +18,22 @@ const GithubProvider = ({ children }) => {
 
   const searchGithubUser = async (user) => {
     toggleError();
-    loading(true);
+    setIsLoading(true);
     const response = await axios(`${rootUrl}/users/${user}`).catch((err) =>
       console.log(err)
     );
     if (response) {
       setGithubUser(response.data);
+      const { login, followers_url } = response.data;
+      axios(`${rootUrl}/users/${login}/repos?per_page=50`).then((response) =>
+        setRepos(response.data)
+      );
+
+      axios(`${followers_url}?per_page=50`).then((response) =>
+        setFollowers(response.data)
+      );
+      //   https://api.github.com/users/magentaspruce/repos?per_page=100
+      //   https://api.github.com/users/magentaspruce/followers
     } else {
       toggleError(
         true,
